@@ -25,7 +25,6 @@ macro_rules! check {
 }
 
 pub(crate) struct Ada;
-unsafe impl Sync for Ada {}
 impl Rule for Ada {
     check!(
         r"^(?:[[:upper:]][[:lower:]]+_)+[[:upper:]][[:lower:]]+$",
@@ -45,7 +44,6 @@ impl Rule for Ada {
 }
 
 pub(crate) struct Camel;
-unsafe impl Sync for Camel {}
 impl Rule for Camel {
     check!(r"^[[:lower:]]+(?:[[:upper:]][[:lower:]]+)+$", Camel);
 
@@ -62,7 +60,6 @@ impl Rule for Camel {
 }
 
 pub(crate) struct Dot;
-unsafe impl Sync for Dot {}
 impl Rule for Dot {
     check!(r"^(?:[[:lower:]]+\.)+[[:lower:]]+$", Dot);
 
@@ -72,7 +69,6 @@ impl Rule for Dot {
 }
 
 pub(crate) struct Kebab;
-unsafe impl Sync for Kebab {}
 impl Rule for Kebab {
     check!(r"^(?:[[:lower:]]+-)+[[:lower:]]+$", Kebab);
 
@@ -82,7 +78,6 @@ impl Rule for Kebab {
 }
 
 pub(crate) struct Pascal;
-unsafe impl Sync for Pascal {}
 impl Rule for Pascal {
     check!(r"^(?:[[:upper:]][[:lower:]]+)+$", Pascal);
 
@@ -98,7 +93,6 @@ impl Rule for Pascal {
 }
 
 pub(crate) struct Path;
-unsafe impl Sync for Path {}
 impl Rule for Path {
     check!(
         r"^(?:(?:[[:upper:]]|[[:lower:]])+/)+(?:[[:upper:]]|[[:lower:]])+$",
@@ -111,7 +105,6 @@ impl Rule for Path {
 }
 
 pub(crate) struct ScreamingSnake;
-unsafe impl Sync for ScreamingSnake {}
 impl Rule for ScreamingSnake {
     check!(r"^(?:[[:upper:]]+_)+[[:upper:]]+$", ScreamingSnake);
 
@@ -128,7 +121,6 @@ impl Rule for ScreamingSnake {
 }
 
 pub(crate) struct Snake;
-unsafe impl Sync for Snake {}
 impl Rule for Snake {
     check!(r"^(?:[[:lower:]]+_)+[[:lower:]]+$", Snake);
 
@@ -138,7 +130,6 @@ impl Rule for Snake {
 }
 
 pub(crate) struct Space;
-unsafe impl Sync for Space {}
 impl Rule for Space {
     check!(r"^(?:[[:lower:]]+ )+[[:lower:]]+$", Space);
 
@@ -155,7 +146,6 @@ impl Rule for Space {
 }
 
 pub(crate) struct TitleDash;
-unsafe impl Sync for TitleDash {}
 impl Rule for TitleDash {
     check!(
         r"^(?:[[:upper:]][[:lower:]]+-)+[[:upper:]][[:lower:]]+$",
