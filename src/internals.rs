@@ -49,9 +49,17 @@ pub(crate) fn get_case(str: &str) -> Option<Case> {
     None
 }
 
-pub(crate) fn permutations(parts: Vec<String>) -> Vec<String> {
+pub(crate) fn get_rule(c: Case) -> &'static Rule {
+    for rule in RULES.iter() {
+        if rule.ident == c {
+            return rule;
+        }
+    }
+    unreachable!("added a new Case without adding corresponding rule object")
+}
+
+pub(crate) fn permutations(parts: &[String]) -> Vec<String> {
     let mut result = Vec::with_capacity(RULES.len());
-    let parts = parts.as_slice();
     for rule in RULES.iter() {
         if rule.ident == Case::Space {
             continue;
@@ -61,7 +69,12 @@ pub(crate) fn permutations(parts: Vec<String>) -> Vec<String> {
     result
 }
 
-pub(crate) fn to_vim_regex(parts: Vec<String>) -> String {
+pub(crate) fn to_vim_regex_find(parts: &[String]) -> String {
     let permutations = permutations(parts);
-    format!("\\v\\C({})", permutations.join("|"))
+    format!(r#"\v\C({})"#, permutations.join("|"))
+}
+
+pub(crate) fn transform(parts: &[String], target: Case) -> String {
+    let rule = get_rule(target);
+    rule.produce(parts)
 }

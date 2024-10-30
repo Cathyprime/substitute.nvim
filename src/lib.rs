@@ -45,7 +45,7 @@ mod tests {
             String::from("Some-Word"),
         ];
 
-        let result = crate::internals::permutations(parts.to_vec());
+        let result = crate::internals::permutations(&parts);
 
         for x in 0..perms.len() {
             assert_eq!(&perms[x], &result[x])
@@ -60,6 +60,19 @@ mod tests {
             "some-word", "SomeWord", "some/word",
             "SOME_WORD", "some_word", "Some-Word");
 
-        assert_eq!(dbg!(crate::internals::to_vim_regex(parts.to_vec())), vim_regex);
+        assert_eq!(dbg!(crate::internals::to_vim_regex_find(&parts)), vim_regex);
+    }
+
+    #[test]
+    fn transform_test() {
+        let parts = [
+            String::from("this"),
+            String::from("is"),
+            String::from("some"),
+            String::from("identifier")
+        ];
+        assert_eq!(crate::internals::transform(&parts, crate::internals::Case::Ada), "This_Is_Some_Identifier");
+        assert_eq!(crate::internals::transform(&parts, crate::internals::Case::Snake), "this_is_some_identifier");
+        assert_eq!(crate::internals::transform(&parts, crate::internals::Case::Camel), "thisIsSomeIdentifier");
     }
 }
