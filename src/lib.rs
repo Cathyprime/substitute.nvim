@@ -1,6 +1,6 @@
+mod case;
 mod rules;
 mod utils;
-mod case;
 
 #[cfg(test)]
 mod tests {
@@ -30,10 +30,18 @@ mod tests {
     #[test]
     fn as_vim_regex() {
         let parts = [String::from("some"), String::from("word")];
-        let vim_regex = format!(r#"\v\C({}|{}|{}|{}|{}|{}|{}|{}|{})"#,
-            "Some_Word", "someWord", "some.word",
-            "some-word", "SomeWord", "some/word",
-            "SOME_WORD", "some_word", "Some-Word");
+        let vim_regex = format!(
+            r#"\v\C({}|{}|{}|{}|{}|{}|{}|{}|{})"#,
+            "Some_Word",
+            "someWord",
+            "some.word",
+            "some-word",
+            "SomeWord",
+            "some/word",
+            "SOME_WORD",
+            "some_word",
+            "Some-Word"
+        );
 
         assert_eq!(dbg!(crate::utils::to_vim_regex_find(&parts)), vim_regex);
     }

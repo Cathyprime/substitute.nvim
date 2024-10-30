@@ -14,10 +14,15 @@ pub(crate) fn capitalize_first_mut(str: &mut str) {
 
 pub(crate) fn permutations(parts: &[String]) -> Vec<String> {
     let producers = [
-        p::ada, p::camel, p::dot,
-        p::kebab, p::pascal, p::path,
-        p::screaming_snake, p::snake,
-        p::title_dash
+        p::ada,
+        p::camel,
+        p::dot,
+        p::kebab,
+        p::pascal,
+        p::path,
+        p::screaming_snake,
+        p::snake,
+        p::title_dash,
     ];
     let mut result = Vec::with_capacity(producers.len());
     for producer in producers {
