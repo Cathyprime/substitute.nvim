@@ -1,19 +1,28 @@
 use std::sync::LazyLock;
+use crate::rules::Rule;
 
-use crate::rules::*;
+macro_rules! rule {
+    ($variant:ident, $fn:ident) => {
+        Rule::new(
+            Case::$variant,
+            crate::rules::case_rule_functions::check::$fn,
+            crate::rules::case_rule_functions::produce::$fn
+        )
+    }
+}
 
-static RULES: LazyLock<Vec<Box<dyn Rule>>> = LazyLock::new(|| {
+static RULES: LazyLock<Vec<Rule>> = LazyLock::new(|| {
     vec![
-        Box::new(Ada),
-        Box::new(Camel),
-        Box::new(Dot),
-        Box::new(Kebab),
-        Box::new(Pascal),
-        Box::new(Path),
-        Box::new(ScreamingSnake),
-        Box::new(Snake),
-        Box::new(Space),
-        Box::new(TitleDash),
+        rule!(Ada, ada),
+        rule!(Camel, camel),
+        rule!(Dot, dot),
+        rule!(Kebab, kebab),
+        rule!(Pascal, pascal),
+        rule!(Path, path),
+        rule!(ScreamingSnake, screaming_snake),
+        rule!(Snake, snake),
+        rule!(Space, space),
+        rule!(TitleDash, title_dash),
     ]
 });
 
@@ -29,15 +38,30 @@ pub(crate) enum Case {
     Snake,          // ![[:upper:]] + _
     Space,          // ' '
     TitleDash,      // [[:upper:]] + -
-
-    Invalid, // default
 }
 
-pub(crate) fn get_case(str: &str) -> Case {
+pub(crate) fn get_case(str: &str) -> Option<Case> {
     for rule in RULES.iter() {
         if let Some(case) = rule.check(str) {
-            return case;
+            return Some(case);
         }
     }
-    Case::Invalid
+    None
+}
+
+pub(crate) fn permutations(parts: Vec<String>) -> Vec<String> {
+    let mut result = Vec::with_capacity(RULES.len());
+    let parts = parts.as_slice();
+    for rule in RULES.iter() {
+        if rule.ident == Case::Space {
+            continue;
+        }
+        result.push(rule.produce(parts));
+    }
+    result
+}
+
+pub(crate) fn to_vim_regex(parts: Vec<String>) -> String {
+    let permutations = permutations(parts);
+    format!("\\v\\C({})", permutations.join("|"))
 }
