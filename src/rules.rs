@@ -1,36 +1,183 @@
-use crate::internals::Case;
+pub(crate) mod case_rule_functions {
+    use crate::case::CaseBuf;
 
-type Check = fn(&str) -> Option<Case>;
-type Produce = fn(&[String]) -> String;
-
-pub(crate) struct Rule {
-    pub(crate) ident: Case,
-    check_fn: Check,
-    produce_fn: Produce,
-}
-
-impl Rule {
-    pub(crate) fn check(&self, str: &str) -> Option<Case> {
-        (self.check_fn)(str)
-    }
-
-    pub(crate) fn produce(&self, parts: &[String]) -> String {
-        (self.produce_fn)(parts)
-    }
-
-    pub(crate) fn new(ident: Case, check_fn: Check, produce_fn: Produce) -> Self {
-        Self {
-            ident,
-            check_fn,
-            produce_fn,
+    pub(crate) fn split(case: &CaseBuf) -> Vec<String> {
+        match case {
+            CaseBuf::Ada(s) => splits::ada(s.as_str()),
+            CaseBuf::Camel(s) => splits::camel(s.as_str()),
+            CaseBuf::Dot(s) => splits::dot(s.as_str()),
+            CaseBuf::Kebab(s) => splits::kebab(s.as_str()),
+            CaseBuf::Pascal(s) => splits::pascal(s.as_str()),
+            CaseBuf::Path(s) => splits::path(s.as_str()),
+            CaseBuf::ScreamingSnake(s) => splits::screaming_snake(s.as_str()),
+            CaseBuf::Snake(s) => splits::snake(s.as_str()),
+            CaseBuf::Space(s) => splits::space(s.as_str()),
+            CaseBuf::TitleDash(s) => splits::title_dash(s.as_str()),
         }
     }
-}
 
-pub(crate) mod case_rule_functions {
+    mod splits {
+        pub(super) fn ada(str: &str) -> Vec<String> {
+            snake(str.to_lowercase().as_str())
+        }
+
+        pub(super) fn camel(str: &str) -> Vec<String> {
+            let mut peekable = str.chars().peekable();
+            let mut temp = String::with_capacity(12);
+            let mut results: Vec<String> = Vec::new();
+            while let Some(ch) = peekable.next() {
+                let mut c = ch;
+                if c.is_uppercase() {
+                    c.make_ascii_lowercase();
+                }
+                temp.push(c);
+
+                if peekable.peek().map_or(true, |next| next.is_uppercase()) {
+                    results.push(temp.clone());
+                    temp.clear();
+                }
+            }
+            results
+        }
+
+        pub(super) fn dot(str: &str) -> Vec<String> {
+            str.split(".").map(String::from).collect()
+        }
+
+        pub(super) fn kebab(str: &str) -> Vec<String> {
+            str.split("-").map(String::from).collect()
+        }
+
+        pub(super) fn pascal(str: &str) -> Vec<String> {
+            camel(str)
+        }
+
+        pub(super) fn path(str: &str) -> Vec<String> {
+            str.split("/").map(String::from).collect()
+        }
+
+        pub(super) fn screaming_snake(str: &str) -> Vec<String> {
+            ada(str)
+        }
+
+        pub(super) fn snake(str: &str) -> Vec<String> {
+            str.split("_").map(String::from).collect()
+        }
+
+        pub(super) fn space(str: &str) -> Vec<String> {
+            str.split(" ").map(String::from).collect()
+        }
+
+        pub(super) fn title_dash(str: &str) -> Vec<String> {
+            kebab(str.to_lowercase().as_str())
+        }
+
+        #[cfg(test)]
+        mod tests {
+            #[test]
+            fn ada_test() {
+                let ada = "Some_Ada_Case_Word";
+                let should = ["some", "ada", "case", "word"];
+                let result = super::ada(ada);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn camel_test() {
+                let camel = "someCamelCaseWord";
+                let should = ["some", "camel", "case", "word"];
+                let result = super::camel(camel);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn dot_test() {
+                let dot = "some.dot.case.word";
+                let should = ["some", "dot", "case", "word"];
+                let result = super::dot(dot);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn kebab_test() {
+                let kebab = "some-kebab-case-word";
+                let should = ["some", "kebab", "case", "word"];
+                let result = super::kebab(kebab);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn pascal_test() {
+                let pascal = "SomePascalCaseWord";
+                let should = ["some", "pascal", "case", "word"];
+                let result = super::pascal(pascal);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn path_test() {
+                let path = "some/path/case/word";
+                let should = ["some", "path", "case", "word"];
+                let result = super::path(path);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn screaming_snake_test() {
+                let screaming_snake = "SOME_SCREAMING_SNAKE_CASE_WORD";
+                let should = ["some", "screaming", "snake", "case", "word"];
+                let result = super::screaming_snake(screaming_snake);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn snake_test() {
+                let snake = "some_snake_case_word";
+                let should = ["some", "snake", "case", "word"];
+                let result = super::snake(snake);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn space_test() {
+                let space = "some space case word";
+                let should = ["some", "space", "case", "word"];
+                let result = super::space(space);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+
+            #[test]
+            fn title_dash_test() {
+                let title_dash = "Some-Title-Dash-Case-Word";
+                let should = ["some", "title", "dash", "case", "word"];
+                let result = super::title_dash(title_dash);
+                for x in 0..should.len() {
+                    assert_eq!(should[x], result[x]);
+                }
+            }
+        }
+    }
 
     pub(crate) mod check {
-        use crate::internals::Case;
+        use crate::case::Case;
         use regex::Regex;
 
         macro_rules! check {
@@ -46,20 +193,32 @@ pub(crate) mod case_rule_functions {
             };
         }
 
-        check!(ada, Ada,
-            r"^(?:[[:upper:]][[:lower:]]+_)+[[:upper:]][[:lower:]]+$");
+        check!(
+            ada,
+            Ada,
+            r"^(?:[[:upper:]][[:lower:]]+_)+[[:upper:]][[:lower:]]+$"
+        );
         check!(camel, Camel, r"^[[:lower:]]+(?:[[:upper:]][[:lower:]]+)+$");
         check!(dot, Dot, r"^(?:[[:lower:]]+\.)+[[:lower:]]+$");
         check!(kebab, Kebab, r"^(?:[[:lower:]]+-)+[[:lower:]]+$");
         check!(pascal, Pascal, r"^(?:[[:upper:]][[:lower:]]+)+$");
-        check!(path, Path,
-            r"^(?:(?:[[:upper:]]|[[:lower:]])+/)+(?:[[:upper:]]|[[:lower:]])+$");
-        check!(screaming_snake, ScreamingSnake,
-            r"^(?:[[:upper:]]+_)+[[:upper:]]+$");
+        check!(
+            path,
+            Path,
+            r"^(?:(?:[[:upper:]]|[[:lower:]])+/)+(?:[[:upper:]]|[[:lower:]])+$"
+        );
+        check!(
+            screaming_snake,
+            ScreamingSnake,
+            r"^(?:[[:upper:]]+_)+[[:upper:]]+$"
+        );
         check!(snake, Snake, r"^(?:[[:lower:]]+_)+[[:lower:]]+$");
         check!(space, Space, r"^(?:[[:lower:]]+ )+[[:lower:]]+$");
-        check!(title_dash, TitleDash,
-            r"^(?:[[:upper:]][[:lower:]]+-)+[[:upper:]][[:lower:]]+$");
+        check!(
+            title_dash,
+            TitleDash,
+            r"^(?:[[:upper:]][[:lower:]]+-)+[[:upper:]][[:lower:]]+$"
+        );
     }
 
     pub(crate) mod produce {
