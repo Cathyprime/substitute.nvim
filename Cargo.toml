@@ -3,5 +3,9 @@ name = "text_case"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
+nvim-oxi = { version = "0.5.1", features = ["mlua", "neovim-0-10"] }
 regex = "1.11.1"

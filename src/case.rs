@@ -1,4 +1,6 @@
 use crate::rules::case_rule_functions::check as c;
+use crate::rules::case_rule_functions::produce as p;
+use crate::rules::case_rule_functions::split;
 
 #[derive(Debug, Eq, PartialEq)]
 pub(crate) enum CaseBuf {
@@ -29,7 +31,7 @@ pub(crate) enum Case {
 }
 
 impl Case {
-    pub(crate) fn into_buf_case(self, str: String) -> CaseBuf {
+    pub(crate) fn into_case_buf(self, str: String) -> CaseBuf {
         match self {
             Case::Ada => CaseBuf::Ada(str),
             Case::Camel => CaseBuf::Camel(str),
@@ -41,6 +43,27 @@ impl Case {
             Case::Snake => CaseBuf::Snake(str),
             Case::Space => CaseBuf::Space(str),
             Case::TitleDash => CaseBuf::TitleDash(str),
+        }
+    }
+}
+
+impl CaseBuf {
+    pub(crate) fn parts(&self) -> Vec<String> {
+        split(self)
+    }
+
+    pub(crate) fn like_me(&self, other: &[String]) -> String {
+        match self {
+            CaseBuf::Ada(_) => p::ada(other),
+            CaseBuf::Camel(_) => p::camel(other),
+            CaseBuf::Dot(_) => p::dot(other),
+            CaseBuf::Kebab(_) => p::kebab(other),
+            CaseBuf::Pascal(_) => p::pascal(other),
+            CaseBuf::Path(_) => p::path(other),
+            CaseBuf::ScreamingSnake(_) => p::screaming_snake(other),
+            CaseBuf::Snake(_) => p::snake(other),
+            CaseBuf::Space(_) => p::space(other),
+            CaseBuf::TitleDash(_) => p::title_dash(other),
         }
     }
 }
@@ -63,7 +86,7 @@ impl TryFrom<&str> for CaseBuf {
         ];
         for pred in predicates {
             if let Some(case) = pred(value) {
-                return Ok(case.into_buf_case(value.to_owned()));
+                return Ok(case.into_case_buf(value.to_owned()));
             }
         }
         Err(())

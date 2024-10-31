@@ -22,6 +22,7 @@ pub(crate) fn permutations(parts: &[String]) -> Vec<String> {
         p::path,
         p::screaming_snake,
         p::snake,
+        p::space,
         p::title_dash,
     ];
     let mut result = Vec::with_capacity(producers.len());
