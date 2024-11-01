@@ -1,5 +1,4 @@
 local utils = require("substitute.utils")
--- print("generated regex:", utils.find_regex("some word"))
 
 local opfunc = [[v:lua.require'substitute'.replace]]
 local subfunc = [[v:lua.require'substitute'.sub()]]
@@ -27,19 +26,15 @@ local function query_prompt()
     if cache.query == "" then
         return "Query replace in region: "
     else
-        return "Query replace in region (default "..cache.query.." -> "..cache.replace.."): "
+        return "Query replace in region ("..cache.query.." -> "..cache.replace.."): "
     end
 end
 
 local function replace_prompt()
     if cache.replace == "" then
-        return (
-            cache.use_abolish and "[Using abolish] " or ""
-        ) .. "Query replace "..cache.query.." with: "
+        return "Query replace "..cache.query.." with: "
     else
-        return (
-            cache.use_abolish and "[Using abolish] " or ""
-        ) .. "Query replacing "..cache.query.." with "..cache.replace..": "
+        return "Query replacing "..cache.query.." with "..cache.replace..": "
     end
 end
 
