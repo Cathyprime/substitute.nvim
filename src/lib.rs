@@ -8,7 +8,7 @@ use nvim_oxi::{Dictionary, Function};
 type CResult = Result<CaseBuf, ()>;
 
 #[nvim_oxi::plugin]
-fn main() -> nvim_oxi::Result<Dictionary> {
+fn substitute_utils() -> nvim_oxi::Result<Dictionary> {
     let get_regex = Function::from_fn(|str: String| -> String {
         let case: CResult = str.as_str().try_into();
         let result = match case {
