@@ -49,7 +49,11 @@ pub(crate) mod case_rule_functions {
         }
 
         pub(super) fn pascal(str: &str) -> Vec<String> {
-            camel(str)
+            if str.chars().filter(|c| c.is_uppercase()).count() == 1 {
+                vec![str.to_lowercase()]
+            } else {
+                camel(str)
+            }
         }
 
         pub(super) fn path(str: &str) -> Vec<String> {
@@ -122,6 +126,14 @@ pub(crate) mod case_rule_functions {
                 for x in 0..should.len() {
                     assert_eq!(should[x], result[x]);
                 }
+            }
+
+            #[test]
+            fn pascal_test_single_word() {
+                let pascal = "Pascal";
+                let should = ["pascal"];
+                let result = super::pascal(pascal);
+                assert_eq!(should[0], result[0]);
             }
 
             #[test]
