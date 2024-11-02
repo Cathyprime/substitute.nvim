@@ -119,6 +119,11 @@ mod tests {
         ScreamingSnake,
         "SOME_SCREAMING_SNAKE_CASE"
     );
+    simp_case!(
+        get_screaming_snake_test_short,
+        ScreamingSnake,
+        "SOME"
+    );
     simp_case!(get_snake_test, Snake, "some_snake_case");
     simp_case!(get_space_test, Space, "some ada case");
     simp_case!(get_title_dash_test, TitleDash, "Some-Title-Dash-Case");

@@ -2,10 +2,7 @@ mod case;
 mod rules;
 mod utils;
 
-use crate::case::CaseBuf;
 use nvim_oxi::{Dictionary, Function};
-
-type CResult = Result<CaseBuf, ()>;
 
 #[nvim_oxi::plugin]
 fn substitute_utils() -> nvim_oxi::Result<Dictionary> {

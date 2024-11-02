@@ -133,6 +133,13 @@ mod tests {
     }
 
     #[test]
+    fn replace_short_upper_full() {
+        let from = String::from("WORD");
+        let replacement = String::from("another");
+        assert_eq!("ANOTHER", replace_lua((from, replacement)));
+    }
+
+    #[test]
     fn capitalize_first_mut_test() {
         let mut some_str = String::from("word");
         capitalize_first_mut(&mut some_str);

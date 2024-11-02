@@ -222,7 +222,7 @@ pub(crate) mod case_rule_functions {
         check!(
             screaming_snake,
             ScreamingSnake,
-            r"^(?:[[:upper:]]+_)+[[:upper:]]+$"
+            r"^[[:upper:]]+(?:_[[:upper:]]+)*$"
         );
         check!(snake, Snake, r"^(?:[[:lower:]]+_)+[[:lower:]]+$");
         check!(space, Space, r"^(?:[[:lower:]]+ )+[[:lower:]]+$");
