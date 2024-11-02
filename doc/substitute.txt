@@ -1,0 +1,80 @@
+*substitute.txt*                                             *substitute.nvim*
+query-replace inspired substitute interface for neovim
+
+==============================================================================
+Substitute Features                                      *substitute-features*
+    provides a convinient interface to make use of the vim's `:s` command
+    this plugin defines operator and action mapping to use in normal and
+    visual mode
+
+    additional feature is that it preserves the cases of text
+    example:
+	input: some variable
+	replacement: another variable
+
+    some variable -> another variable
+    someVariable  -> anotherVariable
+    SomeVariable  -> AnotherVariable
+    some_variable -> another_variable
+    Some_Variable -> Another_Variable
+    some-variable -> another-variable
+    Some-Variable -> Another-Variable
+    SOME_VARIABLE -> ANOTHER_VARIABLE
+    some.variable -> another.variable
+    some/variable -> another/variable
+
+    works also for singular words
+	input: dog
+	replacement: cat
+
+    dog -> cat
+    Dog -> Cat
+    DOG -> CAT
+
+    See Also: ~
+	• |:s|
+
+==============================================================================
+Substitute Cases                                            *substitute-cases*
+    Currently the plugin supports those cases:
+
+    • Ada_Case (used in the ada language)
+    • camelCase
+    • dot.case
+    • kebab-case
+    • PascalCase
+    • path/case
+    • SCREAMING_SNAKE_CASE
+    • snake_case
+    • space case
+    • Title-Dash-Case
+
+    this list might be
+
+==============================================================================
+<Plug>(substitute)                                        *<Plug>(substitute)*
+    Plug mapping that defines a operator for normal mode and a action for
+    visual mode
+
+    Usage example: >lua
+    vim.keymap.set("n", "gs", "<Plug>(substitute)")
+    vim.keymap.set("x", "gs", "<Plug>(substitute)")
+<
+    See Also: ~
+	• |nmap|
+	• |xmap|
+	• |using-<Plug>|
+
+==============================================================================
+<Plug>(substitute-linewise)                      *<Plug>(substitute-linewise)*
+    Plug mapping that allows to create a mapping to work on current line in
+    normal mode
+
+    Usage example: >lua
+    vim.keymap.set("n", "gss", "<Plug>(substitute-linewise)")
+<
+    See Also: ~
+	• |nmap|
+	• |using-<Plug>|
+
+vim:tw=78:ts=8:noet:ft=help:norl:
