@@ -12,7 +12,7 @@ The plugin is lazy loaded by default, there is no need to set it up yourself
 `lazy.nvim` example
 ```lua
     {
-        "Cathyprime/substitute.nvim",
+        "cathyprime/substitute.nvim",
         build = "make",
         config = function()
             require("substitute")
