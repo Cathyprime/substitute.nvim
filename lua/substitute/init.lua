@@ -1,5 +1,6 @@
 local subfunc = [[v:lua.require'substitute'.sub()]]
 local opfunc = [[v:lua.require'substitute'.replace]]
+local copfunc = [[v:lua.require'substitute'.creplace]]
 
 local opts = {
     silent = true,
@@ -17,6 +18,11 @@ end
 
 vim.keymap.set("n", "<Plug>(substitute)", function()
     return setup(false)
+end, opts)
+
+vim.keymap.set("n", "<Plug>(substitute-quickfix)", function()
+    vim.go.operatorfunc = copfunc
+    return "g@_"
 end, opts)
 
 vim.keymap.set("n", "<Plug>(substitute-linewise)", function()
@@ -44,6 +50,18 @@ return {
             keyc "<esc>"
         end
         keys(string.format(vim.keycode [[:'[,']s#%s#\=%s#gc<cr>]], utils.find_regex(i.cache_query()), subfunc))
+        vim.go.operatorfunc = opfunc
+    end,
+    creplace = function()
+        local utils = require("substitute.utils")
+        local i = require("substitute._internals")
+        if not i.do_query() then
+            keyc "<esc>"
+        end
+        if not i.do_replace() then
+            keyc "<esc>"
+        end
+        keys(string.format(vim.keycode [[:cdo s#%s#\=%s#gc<cr>]], utils.find_regex(i.cache_query()), subfunc))
         vim.go.operatorfunc = opfunc
     end,
     sub = function()
