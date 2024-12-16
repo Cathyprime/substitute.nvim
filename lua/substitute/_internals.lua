@@ -10,31 +10,37 @@ local cache = {
 local function input(opts)
     opts.cancelreturn = nil
     local ok, result = pcall(vim.fn.input, opts)
-    if not ok then return end
+    if not ok and result then return end
     return result
 end
 
 ---@return string
-local function query_prompt()
+local function query_prompt(p)
+    if p == nil then
+        p = ""
+    end
     if cache.query == "" then
-        return "Query replace in region: "
+        return p .. "Query replace in region: "
     else
-        return "Query replace in region (" .. cache.query .. " -> " .. cache.replace .. "): "
+        return p .. "Query replace in region (" .. cache.query .. " -> " .. cache.replace .. "): "
     end
 end
 
 ---@return string
-local function replace_prompt()
+local function replace_prompt(p)
+    if p == nil then
+        p = ""
+    end
     if cache.replace == "" then
-        return "Query replace " .. cache.query .. " with: "
+        return p .. "Query replace " .. cache.query .. " with: "
     else
-        return "Query replacing " .. cache.query .. " with " .. cache.replace .. ": "
+        return p .. "Query replacing " .. cache.query .. " with " .. cache.replace .. ": "
     end
 end
 
-local function do_query()
+local function do_query(p)
     local query = input({
-        prompt = query_prompt()
+        prompt = query_prompt(p)
     })
 
     if not query then
@@ -44,9 +50,9 @@ local function do_query()
     return true
 end
 
-local function do_replace()
+local function do_replace(p)
     local replace = input({
-        prompt = replace_prompt()
+        prompt = replace_prompt(p)
     })
 
     if not replace then

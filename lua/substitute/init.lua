@@ -55,10 +55,10 @@ return {
     creplace = function()
         local utils = require("substitute.utils")
         local i = require("substitute._internals")
-        if not i.do_query() then
+        if not i.do_query("[Quickfix] ") then
             keyc "<esc>"
         end
-        if not i.do_replace() then
+        if not i.do_replace("[Quickfix] ") then
             keyc "<esc>"
         end
         keys(string.format(vim.keycode [[:cdo s#%s#\=%s#gc<cr>]], utils.find_regex(i.cache_query()), subfunc))
